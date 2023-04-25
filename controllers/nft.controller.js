@@ -11,7 +11,7 @@ async function generateMediaUrls(req, res) {
     }
 
     const mediaType = req.body.mediaType.toLowerCase();
-    const newNft = {};
+    // const newNft = {};
 
     if (mediaType == "artwork") {
       const artUrl = await uploadToCloudinary(req.files.artFile);
@@ -29,10 +29,6 @@ async function generateMediaUrls(req, res) {
         return res.status(500).send("An error occurred.");
       }
       return res.status(200).json({ thumbnailUrl: thumbUrl, fileUrl: fileUrl });
-
-      // newNft.mediaType = mediaType;
-      // newNft.musicThumbnailUrl = thumbUrl;
-      // newNft.musicFileUrl = fileUrl;
     } else if (mediaType == "movie") {
       const thumbUrl = await uploadToCloudinary(req.files.movieThumbnail);
       const fileUrl = await uploadToCloudinary(req.files.movieFile);
@@ -40,10 +36,6 @@ async function generateMediaUrls(req, res) {
         return res.status(500).send("An error occurred.");
       }
       return res.status(200).json({ thumbnailUrl: thumbUrl, fileUrl: fileUrl });
-
-      // newNft.mediaType = mediaType;
-      // newNft.movieThumbnailUrl = thumbUrl;
-      // newNft.movieFileUrl = fileUrl;
     } else {
       return res.status(400).send("Invalid media type.");
     }
@@ -56,6 +48,7 @@ async function generateMediaUrls(req, res) {
 
 // When NFT is minted, this controller is used to add it
 // to the off-chain server
+// mediaType = artwork | music | movie
 async function addNft(req, res) {
   try {
     const newNft = {
@@ -70,6 +63,7 @@ async function addNft(req, res) {
       assetSymbol: req.body.assetSymbol,
       assetType: req.body.assetType,
     };
+
     if (req.body.assetType.toLowerCase() == "physical") {
       newNft.artistName = req.body.artistName;
       newNft.medium = req.body.medium;
