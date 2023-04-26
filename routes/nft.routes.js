@@ -2,8 +2,10 @@ const express = require("express");
 const nftController = require("../controllers/nft.controller");
 const router = express.Router();
 
+router.post("/generateMediaUrls", nftController.generateMediaUrls);
 router.post("/addNft", nftController.addNft);
 router.get("/allNfts", nftController.getAllNfts);
+router.get("/nftsByOwner/:ownerKey", nftController.getAllNfts);
 router.get("/nftsInAuction", nftController.getAllNftsInAuction);
 router.get("/:tokenId", nftController.getNftByTokenId);
 router.put("/updateOwner/:tokenId", nftController.updateOwner);

@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const fileUpload = require("express-fileupload");
 const nftRoutes = require("./routes/nft.routes");
 const auctionRoutes = require("./routes/auction.routes");
 const swaggerDocs = require("./utils/swagger");
@@ -12,6 +13,11 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(
+  fileUpload({
+    createParentPath: true,
+  })
+);
 
 // APIs
 app.use("/api/nft", nftRoutes);
