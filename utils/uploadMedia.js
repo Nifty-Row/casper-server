@@ -1,3 +1,4 @@
+const fs = require("fs");
 const cloudinary = require("cloudinary").v2;
 
 // Configuration
@@ -11,6 +12,7 @@ cloudinary.config({
 async function uploadToCloudinary(mediaFile) {
   try {
     const result = await cloudinary.uploader.upload(mediaFile);
+    fs.unlinkSync(fileLocalPath);
 
     return result.secure_url;
   } catch (error) {

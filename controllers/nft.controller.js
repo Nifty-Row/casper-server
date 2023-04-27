@@ -1,4 +1,6 @@
+const path = require("path");
 const db = require("../models");
+const moveFile = require("../utils/moveFile");
 
 // Get the model
 const Nfts = db.nfts;
@@ -11,23 +13,74 @@ async function generateMediaUrls(req, res) {
     const mediaType = req.body.mediaType.toLowerCase();
 
     if (mediaType == "artwork") {
-      const artUrl = await uploadToCloudinary(req.files.artFile);
+      const artFile = req.files.artFile;
+      const artworkLocation = path.join(
+        __dirname,
+        "..",
+        "uploads",
+        artFile.name
+      );
+      const moveRes = await moveFile(artFile, artworkLocation);
+      if (!moveRes) {
+        return res.status(500).send("Error in moving file");
+      }
+      const artUrl = await uploadToCloudinary(artworkLocation);
       if (artUrl == "") {
-        return res.status(500).send("An error occurred.");
+        return res.status(500).send("File storage error.");
       }
       return res.status(200).json({ artworkUrl: artUrl });
     } else if (mediaType == "music") {
-      const thumbUrl = await uploadToCloudinary(req.files.musicThumbnail);
-      const fileUrl = await uploadToCloudinary(req.files.musicFile);
+      const musicThumbnail = req.files.musicThumbnail;
+      const musicFile = req.files.musicFile;
+
+      const thumbLocation = path.join(
+        __dirname,
+        "..",
+        "uploads",
+        musicThumbnail.name
+      );
+      const fileLocation = path.join(
+        __dirname,
+        "..",
+        "uploads",
+        musicFile.name
+      );
+      const thumbMoveRes = await moveFile(musicThumbnail, thumbLocation);
+      const fileMoveRes = await moveFile(musicFile, fileLocation);
+      if (!thumbMoveRes || !fileMoveRes) {
+        return res.status(500).send("Error in moving file");
+      }
+      const thumbUrl = await uploadToCloudinary(thumbLocation);
+      const fileUrl = await uploadToCloudinary(fileLocation);
       if (thumbUrl == "" || fileUrl == "") {
-        return res.status(500).send("An error occurred.");
+        return res.status(500).send("File storage error.");
       }
       return res.status(200).json({ thumbnailUrl: thumbUrl, fileUrl: fileUrl });
     } else if (mediaType == "movie") {
-      const thumbUrl = await uploadToCloudinary(req.files.movieThumbnail);
-      const fileUrl = await uploadToCloudinary(req.files.movieFile);
+      const movieThumbnail = req.files.movieThumbnail;
+      const movieFile = req.files.movieFile;
+
+      const thumbLocation = path.join(
+        __dirname,
+        "..",
+        "uploads",
+        movieThumbnail.name
+      );
+      const fileLocation = path.join(
+        __dirname,
+        "..",
+        "uploads",
+        movieFile.name
+      );
+      const thumbMoveRes = await moveFile(movieThumbnail, thumbLocation);
+      const fileMoveRes = await moveFile(movieFile, fileLocation);
+      if (!thumbMoveRes || !fileMoveRes) {
+        return res.status(500).send("Error in moving file");
+      }
+      const thumbUrl = await uploadToCloudinary(thumbLocation);
+      const fileUrl = await uploadToCloudinary(fileLocation);
       if (thumbUrl == "" || fileUrl == "") {
-        return res.status(500).send("An error occurred.");
+        return res.status(500).send("File storage error.");
       }
       return res.status(200).json({ thumbnailUrl: thumbUrl, fileUrl: fileUrl });
     } else {
