@@ -9,9 +9,9 @@ cloudinary.config({
 });
 
 // Upload file
-async function uploadToCloudinary(mediaFile) {
+async function uploadToCloudinary(fileLocalPath) {
   try {
-    const result = await cloudinary.uploader.upload(mediaFile);
+    const result = await cloudinary.uploader.upload(fileLocalPath);
     fs.unlinkSync(fileLocalPath);
 
     return result.secure_url;

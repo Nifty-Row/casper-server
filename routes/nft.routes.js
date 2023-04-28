@@ -4,6 +4,7 @@ const router = express.Router();
 
 router.post("/generateMediaUrls", nftController.generateMediaUrls);
 router.post("/addNft", nftController.addNft);
+router.post("/deploySigned", nftController.deploySigned);
 router.get("/allNfts", nftController.getAllNfts);
 router.get("/nftsByOwner/:ownerKey", nftController.getAllNfts);
 router.get("/nftsInAuction", nftController.getAllNftsInAuction);

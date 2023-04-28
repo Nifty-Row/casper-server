@@ -1,14 +1,7 @@
 // Casper
-const {
-  CasperServiceByJsonRPC,
-  DeployUtil,
-  EventStream,
-  EventName,
-  CLValueParsers,
-  CLMap,
-  CLValueBuilder,
-  CLPublicKey,
-} = require("casper-js-sdk");
+const { CasperServiceByJsonRPC, DeployUtil } = require("casper-js-sdk");
+const confirmDeploy = require("../utils/confirmDeploy");
+const getDeployedHashes = require("../utils/getDeployedHashes");
 const client = new CasperServiceByJsonRPC("http://3.136.227.9:7777/rpc");
 
 // Get the models
@@ -68,12 +61,32 @@ async function deployAuction(req, res) {
     const signedDeployJSON = req.body.signedDeployJSON;
 
     const signedDeploy = DeployUtil.deployFromJson(signedDeployJSON).unwrap();
-    const { deploy_hash } = await client.deploy(signedDeploy);
-    console.log("deploy_hash is: ", deploy_hash);
+    const { deployHash } = await client.deploy(signedDeploy);
+    const result = await confirmDeploy(deployHash);
 
-    return res.status(200).send(deploy_hash);
+    const hashes = await getDeployedHashes(deployHash);
+    if (hashes == "") {
+      return res.status(500).send("Error in getting hashes");
+    }
+
+    return res.status(200).json({ deployHash, hashes });
   } catch (error) {
-    return res.status(500).send("An error occurred.");
+    return res.status(500).send("Error deploying on-chain");
+  }
+}
+
+// Blockchain deploys
+async function deploySigned() {
+  try {
+    const signedDeployJSON = req.body.signedDeployJSON;
+
+    const deploy = DeployUtil.deployFromJson(signedDeployJSON).unwrap();
+    const deployHash = await client.putDeploy(deploy);
+    const result = await confirmDeploy(deployHash);
+
+    res.status(200).send(result);
+  } catch (error) {
+    res.status(500).send("Error deploying on-chain");
   }
 }
 
@@ -82,4 +95,5 @@ module.exports = {
   addBidOnAuction,
   getAllAuctions,
   deployAuction,
+  deploySigned,
 };

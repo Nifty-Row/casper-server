@@ -1,17 +1,22 @@
-async function getDeploy(NODE_URL, deployHash) {
+const {
+  CasperClient,
+  CLPublicKey,
+  Keys,
+  CasperServiceByJsonRPC,
+} = require("casper-js-sdk");
+
+const NODE_URL = "http://76.91.193.251:7777/rpc";
+async function confirmDeploy(deployHash) {
   const client = new CasperClient(NODE_URL);
   let i = 300;
   while (i != 0) {
     const [deploy, raw] = await client.getDeploy(deployHash);
     if (raw.execution_results.length !== 0) {
-      // @ts-ignore
       if (raw.execution_results[0].result.Success) {
         return deploy;
       } else {
-        // @ts-ignore
         throw Error(
           "Contract execution: " +
-            // @ts-ignore
             raw.execution_results[0].result.Failure.error_message
         );
       }
@@ -23,3 +28,5 @@ async function getDeploy(NODE_URL, deployHash) {
   }
   throw Error("Timeout after " + i + "s. Something's wrong");
 }
+
+module.exports = confirmDeploy;

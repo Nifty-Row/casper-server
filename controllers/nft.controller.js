@@ -1,6 +1,10 @@
+const { DeployUtil } = require("casper-js-sdk");
 const path = require("path");
 const db = require("../models");
+const uploadToCloudinary = require("../utils/uploadMedia");
 const moveFile = require("../utils/moveFile");
+const confirmDeploy = require("../utils/confirmDeploy");
+const getDeployedHashes = require("../utils/getDeployedHashes");
 
 // Get the model
 const Nfts = db.nfts;
@@ -140,8 +144,13 @@ async function addNft(req, res) {
 async function getAllNfts(req, res) {
   try {
     const foundNfts = await Nfts.findAll({});
-    return res.status(200).send(foundNfts);
+    //
+    const deployHash =
+      "fedd723f57592b53bba63e5632d2f5b048d09967099f225b9ec66d5411910cd0";
+    const hashes = await getDeployedHashes(deployHash);
+    return res.status(200).send(hashes);
   } catch (error) {
+    console.error("allNfts", error);
     return res.status(500).send("An error occurred.");
   }
 }
@@ -205,6 +214,20 @@ async function removeNFT(req, res) {
   }
 }
 
+// Blockchain deploys
+async function deploySigned() {
+  try {
+    const signedDeployJSON = req.body.signedDeployJSON;
+
+    const deploy = DeployUtil.deployFromJson(signedDeployJSON).unwrap();
+    const deployHash = await client.putDeploy(deploy);
+    const result = await confirmDeploy(deployHash);
+    res.status(200).send(result);
+  } catch (error) {
+    res.status(500).send("Error deploying on-chain");
+  }
+}
+
 module.exports = {
   generateMediaUrls,
   addNft,
@@ -214,4 +237,5 @@ module.exports = {
   getNftsByOwner,
   updateOwner,
   removeNFT,
+  deploySigned,
 };
