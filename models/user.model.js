@@ -4,15 +4,12 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-
-    bids: {
+    canMint: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    category: {
       type: DataTypes.STRING,
-      get() {
-        return this.getDataValue("bids").split(";");
-      },
-      set(val) {
-        this.setDataValue("bids", val.join(";"));
-      },
     },
   });
 

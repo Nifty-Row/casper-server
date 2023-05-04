@@ -1,0 +1,30 @@
+{
+  "data": "",
+  "status": 200,
+  "statusText": "OK",
+  "headers": { "content-length": "0" },
+  "config": {
+    "transitional": {
+      "silentJSONParsing": true,
+      "forcedJSONParsing": true,
+      "clarifyTimeoutError": false
+    },
+    "adapter": ["xhr", "http"],
+    "transformRequest": [null],
+    "transformResponse": [null],
+    "timeout": 0,
+    "xsrfCookieName": "XSRF-TOKEN",
+    "xsrfHeaderName": "X-XSRF-TOKEN",
+    "maxContentLength": -1,
+    "maxBodyLength": -1,
+    "env": {},
+    "headers": {
+      "Accept": "application/json, text/plain, */*",
+      "Content-Type": "application/json"
+    },
+    "method": "post",
+    "url": "http://localhost:5000/api/nft/deploySigned",
+    "data": "{\"signedDeployJSON\":{\"deploy\":{\"hash\":\"78b969fe7fe3a4ddcd1152d5e57b040d68d6796a4d94f9c813c22409d6ad78fb\",\"header\":{\"account\":\"015f38eda3e8f6257b43179373b2db7277dad62589ac3d89f592edb62143b4dbb6\",\"timestamp\":\"2023-05-01T17:34:19.245Z\",\"ttl\":\"30m\",\"gas_price\":1,\"body_hash\":\"93927565d011f2c57152254df95147a6b3e2e4252270edd53fdf572e7c114c10\",\"dependencies\":[],\"chain_name\":\"casper-test\"},\"payment\":{\"ModuleBytes\":{\"module_bytes\":\"\",\"args\":[[\"amount\",{\"bytes\":\"0164\",\"cl_type\":\"U512\"}]]}},\"session\":{\"StoredContractByHash\":{\"hash\":\"976860ede039b6dfea08bb5565b5403b3df014b54dbce838c9ec40c065b04258\",\"entry_point\":\"mint\",\"args\":[[\"recipient\",{\"bytes\":\"009f67de32a9b87dfa7c416c34828a27dddf7c38810dbd29d601c7fd7078e1a88a\",\"cl_type\":\"Key\"}],[\"token_ids\",{\"bytes\":\"0101000000080000003132333461626364\",\"cl_type\":{\"Option\":{\"List\":\"String\"}}}],[\"token_metas\",{\"bytes\":\"0100000007000000040000006e616d650e0000004d7920417765736f6d65204e46540b0000006465736372697074696f6e1600000054686973206973206d7920616d617a696e67204e46540f000000736f6369616c4d656469614c696e6b2000000068747470733a2f2f747769747465722e636f6d2f6d79617765736f6d654e46540b000000617373657453796d626f6c060000004d59414e46540900000061737365745479706508000000706879736963616c090000006d656469615479706505000000696d6167650a000000617274776f726b55726c3300000068747470733a2f2f6c6973617375697465732e636f6d2f6173736574732f696d616765732f67616c6c6572792f31352e6a7067\",\"cl_type\":{\"List\":{\"Map\":{\"key\":\"String\",\"value\":\"String\"}}}}],[\"token_commissions\",{\"bytes\":\"0100000007000000040000006e616d650e0000004d7920417765736f6d65204e46540b0000006465736372697074696f6e1600000054686973206973206d7920616d617a696e67204e46540f000000736f6369616c4d656469614c696e6b2000000068747470733a2f2f747769747465722e636f6d2f6d79617765736f6d654e46540b000000617373657453796d626f6c060000004d59414e46540900000061737365745479706508000000706879736963616c090000006d656469615479706505000000696d6167650a000000617274776f726b55726c3300000068747470733a2f2f6c6973617375697465732e636f6d2f6173736574732f696d616765732f67616c6c6572792f31352e6a7067\",\"cl_type\":{\"List\":{\"Map\":{\"key\":\"String\",\"value\":\"String\"}}}}]]}},\"approvals\":[{\"signer\":\"015f38eda3e8f6257b43179373b2db7277dad62589ac3d89f592edb62143b4dbb6\",\"signature\":\"0166f1a533c0d873331d2bef7ecf8df3a98c5a0266cc19b38ad64d56d5b15473bd8104d528cd856cd4d1f199dd03f2ea0aba78283a1158ad0a2b5511e66a7b5106\"}]}}}"
+  },
+  "request": {}
+}

@@ -1,13 +1,31 @@
-const { DeployUtil } = require("casper-js-sdk");
+const {
+  DeployUtil,
+  CasperClient,
+  RuntimeArgs,
+  CLValueBuilder,
+  CLMap,
+  CLList,
+  CLKey,
+  CLPublicKey,
+  CLAccountHash,
+  CLString,
+  CLOption,
+} = require("casper-js-sdk");
 const path = require("path");
 const db = require("../models");
 const uploadToCloudinary = require("../utils/uploadMedia");
 const moveFile = require("../utils/moveFile");
 const confirmDeploy = require("../utils/confirmDeploy");
 const getDeployedHashes = require("../utils/getDeployedHashes");
+const getKeyPairOfContract = require("../utils/getKeyPairOfContract");
 
-// Get the model
+// Initialize Casper client
+const NODE_URL = "http://76.91.193.251:7777/rpc";
+const client = new CasperClient(NODE_URL);
+
+// Get the models
 const Nfts = db.nfts;
+const Users = db.users;
 
 async function generateMediaUrls(req, res) {
   try {
@@ -101,10 +119,12 @@ async function generateMediaUrls(req, res) {
 async function addNft(req, res) {
   try {
     const mediaType = req.body.mediaType.toLowerCase();
+    const assetType = req.body.assetType.toLowerCase();
+    const deployerKey = req.body.deployerKey;
 
     const newNft = {
       tokenId: req.body.tokenId,
-      deployerKey: req.body.deployerKey,
+      deployerKey: deployerKey,
       ownerKey: req.body.ownerKey,
       mediaType: mediaType,
       mediaName: req.body.mediaName,
@@ -127,11 +147,26 @@ async function addNft(req, res) {
       return res.status(400).send("Invalid media type.");
     }
 
-    if (req.body.assetType.toLowerCase() == "physical") {
+    if (assetType == "physical") {
       newNft.artistName = req.body.artistName;
       newNft.medium = req.body.medium;
       newNft.year = req.body.year;
       newNft.size = req.body.size;
+    }
+
+    const foundUser = await Users.findOne({
+      where: { publicKey: deployerKey },
+    });
+    if (foundUser == null) {
+      const newUser = {
+        publicKey: deployerKey,
+        canMint: false,
+        category: "Creator",
+      };
+      await Users.create(newUser);
+    } else {
+      foundUser.category = assetType == "physical" ? "Gallery" : "Creator";
+      await foundUser.save();
     }
 
     const createdNft = await Nfts.create(newNft);
@@ -144,11 +179,12 @@ async function addNft(req, res) {
 async function getAllNfts(req, res) {
   try {
     const foundNfts = await Nfts.findAll({});
-    //
-    const deployHash =
-      "fedd723f57592b53bba63e5632d2f5b048d09967099f225b9ec66d5411910cd0";
-    const hashes = await getDeployedHashes(deployHash);
-    return res.status(200).send(hashes);
+    // const hashes = await getDeployedHashes(
+    //   "2ff12c3005de60d09944faeb351badd6809da917c74a1f9b4b5fefd52b788c18"
+    // );
+
+    return res.status(200).send(foundNfts);
+    // return res.status(200).send(hashes);
   } catch (error) {
     console.error("allNfts", error);
     return res.status(500).send("An error occurred.");
@@ -215,16 +251,67 @@ async function removeNFT(req, res) {
 }
 
 // Blockchain deploys
-async function deploySigned() {
+
+async function grantMinter(req, res) {
+  try {
+    const PATH_TO_SOURCE_KEYS = path.join(__dirname, "..", "nakulkey");
+    const keyPairofContract = getKeyPairOfContract(PATH_TO_SOURCE_KEYS);
+
+    const publicKey = req.body.publicKey;
+    const hash = CLPublicKey.fromHex(publicKey).toAccountHash();
+    const accounthash = new CLAccountHash(hash);
+    const minter = new CLKey(accounthash);
+
+    // NFT contract hash
+    const contractHash =
+      "hash-976860ede039b6dfea08bb5565b5403b3df014b54dbce838c9ec40c065b04258";
+    const contractHashAsByteArray = [
+      ...Buffer.from(contractHash.slice(5), "hex"),
+    ];
+
+    let deploy = DeployUtil.makeDeploy(
+      new DeployUtil.DeployParams(
+        keyPairofContract.publicKey,
+        "casper-test",
+        1,
+        1800000
+      ),
+      DeployUtil.ExecutableDeployItem.newStoredContractByHash(
+        contractHashAsByteArray,
+        "grant_minter",
+        RuntimeArgs.fromMap({
+          minter: minter,
+        })
+      ),
+      DeployUtil.standardPayment(10000000000)
+    );
+
+    deploy = client.signDeploy(deploy, keyPairofContract);
+
+    let deployHash = await client.putDeploy(deploy);
+    const result = await confirmDeploy(deployHash);
+    const newUser = {
+      publicKey: publicKey,
+      canMint: true,
+      category: "Collector",
+    };
+    await Users.create(newUser);
+
+    return res.status(200).send(deployHash);
+  } catch (error) {
+    return res.status(500).send("Error deploying on-chain");
+  }
+}
+async function deploySigned(req, res) {
   try {
     const signedDeployJSON = req.body.signedDeployJSON;
 
     const deploy = DeployUtil.deployFromJson(signedDeployJSON).unwrap();
-    const deployHash = await client.putDeploy(deploy);
+    const deployHash = await client.putDeploy(deploy); //
     const result = await confirmDeploy(deployHash);
-    res.status(200).send(result);
+    return res.status(200).send(result);
   } catch (error) {
-    res.status(500).send("Error deploying on-chain");
+    return res.status(500).send("Error deploying on-chain");
   }
 }
 
@@ -237,5 +324,6 @@ module.exports = {
   getNftsByOwner,
   updateOwner,
   removeNFT,
+  grantMinter,
   deploySigned,
 };

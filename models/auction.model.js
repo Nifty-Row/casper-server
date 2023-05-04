@@ -38,24 +38,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
-    bids: {
-      type: DataTypes.STRING,
-      get() {
-        return this.getDataValue("bids").split(";");
-      },
-      set(val) {
-        this.setDataValue("bids", val.join(";"));
-      },
-    },
-    bidders: {
-      type: DataTypes.STRING,
-      get() {
-        return this.getDataValue("bidders").split(";");
-      },
-      set(val) {
-        this.setDataValue("bidders", val.join(";"));
-      },
-    },
   });
 
   return Auction;

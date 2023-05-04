@@ -5,6 +5,10 @@ const {
   CasperServiceByJsonRPC,
 } = require("casper-js-sdk");
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 const NODE_URL = "http://76.91.193.251:7777/rpc";
 async function confirmDeploy(deployHash) {
   const client = new CasperClient(NODE_URL);

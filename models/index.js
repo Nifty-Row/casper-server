@@ -30,8 +30,9 @@ db.sequelize = sequelize;
 db.nfts = require("./nft.model")(sequelize, DataTypes);
 db.auctions = require("./auction.model")(sequelize, DataTypes);
 db.users = require("./user.model")(sequelize, DataTypes);
+db.bids = require("./bid.model")(sequelize, DataTypes);
 
-db.sequelize.sync({ force: false }).then(() => {
+db.sequelize.sync({ force: true }).then(() => {
   console.log("Resync done!");
 });
 

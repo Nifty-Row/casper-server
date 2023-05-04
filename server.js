@@ -11,8 +11,8 @@ const corsOptions = {
   origin: "*",
 };
 app.use(cors(corsOptions));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: "200mb" }));
+app.use(express.urlencoded({ limit: "200mb", extended: true }));
 app.use(
   fileUpload({
     createParentPath: true,

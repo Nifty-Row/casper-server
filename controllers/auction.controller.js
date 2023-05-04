@@ -7,6 +7,7 @@ const client = new CasperServiceByJsonRPC("http://3.136.227.9:7777/rpc");
 // Get the models
 const db = require("../models");
 const Auctions = db.auctions;
+const Bids = db.bids;
 
 // When an auction is initialized, this controller is
 // called to update the off-chain server
@@ -37,11 +38,21 @@ async function addBidOnAuction(req, res) {
     const bid = req.body.bid;
     const bidder = req.body.bidder;
 
-    const update = await Auctions.update(
-      { bids: bid, bidders: bidder },
-      { where: { auctionId: auctionId } }
-    );
-    return res.status(200).send(update);
+    // Check if bidder has already bidded
+    const foundBid = await Bids.findOne({ where: { auctionId, bidder } });
+    if (foundBid == null) {
+      const newBid = {
+        auctionId,
+        bid,
+        bidder,
+      };
+      const createdBid = await Bids.create(newBid);
+      return res.status(200).send("Bid added successfully");
+    } else {
+      foundBid.bid = bid;
+      await foundBid.save();
+      return res.status(200).send("Bid updated successfully");
+    }
   } catch (error) {
     return res.status(500).send("An error occurred");
   }
@@ -76,7 +87,7 @@ async function deployAuction(req, res) {
 }
 
 // Blockchain deploys
-async function deploySigned() {
+async function deploySigned(req, res) {
   try {
     const signedDeployJSON = req.body.signedDeployJSON;
 
