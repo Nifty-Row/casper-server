@@ -30,7 +30,7 @@ const Users = db.users;
 async function generateMediaUrls(req, res) {
   try {
     if (!req.files || Object.keys(req.files).length === 0) {
-      return res.status(400).send("Medial file not uploaded.");
+      return res.status(400).send("Media file not uploaded.");
     }
     const mediaType = req.body.mediaType.toLowerCase();
 
