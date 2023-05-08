@@ -8,6 +8,8 @@ router.post("/deploySigned", nftController.deploySigned);
 router.get("/allNfts", nftController.getAllNfts);
 router.get("/nftsByOwner/:ownerKey", nftController.getAllNfts);
 router.get("/nftsInAuction", nftController.getAllNftsInAuction);
+router.get("/media/:type", nftController.getNftsOfMediaType);
+router.get("/asset/:type", nftController.getNftsOfAssetType);
 router.get("/:tokenId", nftController.getNftByTokenId);
 router.put("/updateOwner/:tokenId", nftController.updateOwner);
 router.delete("/remove/:tokenId", nftController.removeNFT);

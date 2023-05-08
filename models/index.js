@@ -27,10 +27,24 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.nfts = require("./nft.model")(sequelize, DataTypes);
-db.auctions = require("./auction.model")(sequelize, DataTypes);
-db.users = require("./user.model")(sequelize, DataTypes);
-db.bids = require("./bid.model")(sequelize, DataTypes);
+const Nft = require("./nft.model")(sequelize, DataTypes);
+const Auction = require("./auction.model")(sequelize, DataTypes);
+const User = require("./user.model")(sequelize, DataTypes);
+const Bid = require("./bid.model")(sequelize, DataTypes);
+
+User.hasMany(Nft);
+Nft.belongsTo(User);
+
+User.hasMany(Auction);
+Auction.belongsTo(User);
+
+User.hasMany(Bid);
+Bid.belongsTo(User);
+
+db.nfts = Nft;
+db.auctions = Auction;
+db.users = User;
+db.bids = Bid;
 
 db.sequelize.sync({ force: true }).then(() => {
   console.log("Resync done!");

@@ -95,7 +95,7 @@ async function deploySigned(req, res) {
     const deployHash = await client.putDeploy(deploy);
     const result = await confirmDeploy(deployHash);
 
-    res.status(200).send(result);
+    res.status(200).send(deployHash);
   } catch (error) {
     res.status(500).send("Error deploying on-chain");
   }

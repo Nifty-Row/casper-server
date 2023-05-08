@@ -132,7 +132,7 @@ async function addNft(req, res) {
       socialMediaLink: req.body.socialMediaLink,
       tokenHash: req.body.tokenHash,
       assetSymbol: req.body.assetSymbol,
-      assetType: req.body.assetType,
+      assetType: assetType,
     };
 
     if (mediaType == "artwork") {
@@ -178,7 +178,7 @@ async function addNft(req, res) {
 
 async function getAllNfts(req, res) {
   try {
-    const foundNfts = await Nfts.findAll({});
+    const foundNfts = await Nfts.findAll({ include: Users });
     // const hashes = await getDeployedHashes(
     //   "2ff12c3005de60d09944faeb351badd6809da917c74a1f9b4b5fefd52b788c18"
     // );
@@ -195,7 +195,10 @@ async function getNftByTokenId(req, res) {
   try {
     const tokenId = req.params.tokenId;
 
-    const foundNft = await Nfts.findOne({ where: { tokenId: tokenId } });
+    const foundNft = await Nfts.findOne({
+      where: { tokenId: tokenId },
+      include: Users,
+    });
     return res.status(200).send(foundNft);
   } catch (error) {
     return res.status(500).send("An error occurred.");
@@ -215,7 +218,37 @@ async function getNftsByOwner(req, res) {
 
 async function getAllNftsInAuction(req, res) {
   try {
-    const foundNfts = await Nfts.findAll({ where: { inAuction: true } });
+    const foundNfts = await Nfts.findAll({
+      where: { inAuction: true },
+      include: Users,
+    });
+    return res.status(200).send(foundNfts);
+  } catch (error) {
+    return res.status(500).send("An error occurred.");
+  }
+}
+
+async function getNftsOfMediaType(req, res) {
+  try {
+    const mediaType = req.params.type;
+    const foundNfts = await Nfts.findAll({
+      where: { mediaType: mediaType.toLowerCase() },
+      include: Users,
+    });
+    return res.status(200).send(foundNfts);
+  } catch (error) {
+    return res.status(500).send("An error occurred.");
+  }
+}
+
+async function getNftsOfAssetType(req, res) {
+  try {
+    const assetType = req.params.type;
+    const foundNfts = await Nfts.findAll({
+      where: { assetType: assetType.toLowerCase() },
+      include: Users,
+    });
+
     return res.status(200).send(foundNfts);
   } catch (error) {
     return res.status(500).send("An error occurred.");
@@ -309,7 +342,7 @@ async function deploySigned(req, res) {
     const deploy = DeployUtil.deployFromJson(signedDeployJSON).unwrap();
     const deployHash = await client.putDeploy(deploy); //
     const result = await confirmDeploy(deployHash);
-    return res.status(200).send(result);
+    return res.status(200).send(deployHash);
   } catch (error) {
     return res.status(500).send("Error deploying on-chain");
   }
@@ -320,6 +353,8 @@ module.exports = {
   addNft,
   getAllNfts,
   getAllNftsInAuction,
+  getNftsOfMediaType,
+  getNftsOfAssetType,
   getNftByTokenId,
   getNftsByOwner,
   updateOwner,
