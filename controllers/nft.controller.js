@@ -160,7 +160,6 @@ async function addNft(req, res) {
     if (foundUser == null) {
       const newUser = {
         publicKey: deployerKey,
-        canMint: false,
         category: "Creator",
       };
       await Users.create(newUser);

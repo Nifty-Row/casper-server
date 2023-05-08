@@ -9,6 +9,13 @@ module.exports = (sequelize, DataTypes) => {
     about: {
       type: DataTypes.TEXT,
     },
+    canMint: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    category: {
+      type: DataTypes.STRING,
+    },
     website: {
       type: DataTypes.STRING,
     },
@@ -33,13 +40,6 @@ module.exports = (sequelize, DataTypes) => {
     publicKey: {
       type: DataTypes.STRING,
       allowNull: false,
-    },
-    canMint: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-    },
-    category: {
-      type: DataTypes.STRING,
     },
   });
 
