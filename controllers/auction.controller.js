@@ -28,6 +28,8 @@ async function startAuction(req, res) {
     const createdAuction = await Auctions.create(newAuction);
     return res.status(200).send(createdAuction);
   } catch (error) {
+    console.error(error);
+
     return res.status(500).send("An error occurred");
   }
 }
@@ -54,6 +56,8 @@ async function addBidOnAuction(req, res) {
       return res.status(200).send("Bid updated successfully");
     }
   } catch (error) {
+    console.error(error);
+
     return res.status(500).send("An error occurred");
   }
 }
@@ -63,6 +67,8 @@ async function getAllAuctions(req, res) {
     const foundAuctions = await Auctions.findAll({});
     return res.status(200).send(foundAuctions);
   } catch (error) {
+    console.error(error);
+
     return res.status(500).send("An error occurred.");
   }
 }
@@ -82,6 +88,7 @@ async function deployAuction(req, res) {
 
     return res.status(200).json({ deployHash, hashes });
   } catch (error) {
+    console.error(error);
     return res.status(500).send("Error deploying on-chain");
   }
 }
@@ -97,6 +104,7 @@ async function deploySigned(req, res) {
 
     res.status(200).send(deployHash);
   } catch (error) {
+    console.error(error);
     res.status(500).send("Error deploying on-chain");
   }
 }

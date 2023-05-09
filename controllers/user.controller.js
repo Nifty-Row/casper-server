@@ -8,6 +8,8 @@ async function getAllUsers(req, res) {
     });
     return res.status(200).send(foundUsers);
   } catch (error) {
+    console.error(error);
+
     return res.status(500).send("An error occurred.");
   }
 }
@@ -21,6 +23,8 @@ async function getUsersByCategory(req, res) {
     });
     return res.status(200).send(foundUsers);
   } catch (error) {
+    console.error(error);
+
     return res.status(500).send("An error occurred.");
   }
 }

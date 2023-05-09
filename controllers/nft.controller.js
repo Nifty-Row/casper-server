@@ -109,6 +109,8 @@ async function generateMediaUrls(req, res) {
       return res.status(400).send("Invalid media type.");
     }
   } catch (error) {
+    console.error(error);
+
     return res.status(500).send("An error occurred.");
   }
 }
@@ -171,6 +173,8 @@ async function addNft(req, res) {
     const createdNft = await Nfts.create(newNft);
     return res.status(200).json({ nft: createdNft });
   } catch (error) {
+    console.error(error);
+
     return res.status(500).send("An error occurred.");
   }
 }
@@ -200,6 +204,8 @@ async function getNftByTokenId(req, res) {
     });
     return res.status(200).send(foundNft);
   } catch (error) {
+    console.error(error);
+
     return res.status(500).send("An error occurred.");
   }
 }
@@ -211,6 +217,8 @@ async function getNftsByOwner(req, res) {
     const foundNfts = await Nfts.findAll({ where: { ownerKey: ownerKey } });
     return res.status(200).send(foundNfts);
   } catch (error) {
+    console.error(error);
+
     return res.status(500).send("An error occurred.");
   }
 }
@@ -223,6 +231,8 @@ async function getAllNftsInAuction(req, res) {
     });
     return res.status(200).send(foundNfts);
   } catch (error) {
+    console.error(error);
+
     return res.status(500).send("An error occurred.");
   }
 }
@@ -236,6 +246,8 @@ async function getNftsOfMediaType(req, res) {
     });
     return res.status(200).send(foundNfts);
   } catch (error) {
+    console.error(error);
+
     return res.status(500).send("An error occurred.");
   }
 }
@@ -250,6 +262,8 @@ async function getNftsOfAssetType(req, res) {
 
     return res.status(200).send(foundNfts);
   } catch (error) {
+    console.error(error);
+
     return res.status(500).send("An error occurred.");
   }
 }
@@ -267,6 +281,8 @@ async function updateOwner(req, res) {
     );
     return res.status(200).send(updatedNft);
   } catch (error) {
+    console.error(error);
+
     return res.status(500).send("An error occurred.");
   }
 }
@@ -278,6 +294,8 @@ async function removeNFT(req, res) {
     await Nfts.destroy({ where: { tokenId: tokenId } });
     return res.status(200).send("NFT removed successfully.");
   } catch (error) {
+    console.error(error);
+
     return res.status(500).send("An error occurred.");
   }
 }
@@ -331,6 +349,8 @@ async function grantMinter(req, res) {
 
     return res.status(200).send(deployHash);
   } catch (error) {
+    console.error(error);
+
     return res.status(500).send("Error deploying on-chain");
   }
 }
@@ -343,6 +363,8 @@ async function deploySigned(req, res) {
     const result = await confirmDeploy(deployHash);
     return res.status(200).send(deployHash);
   } catch (error) {
+    console.error(error);
+
     return res.status(500).send("Error deploying on-chain");
   }
 }
