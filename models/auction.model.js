@@ -28,9 +28,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       allowNull: false,
     },
-    sellNowPrice: {
-      type: DataTypes.FLOAT,
-    },
     minimumPrice: {
       type: DataTypes.FLOAT,
     },

@@ -11,28 +11,28 @@ const Bids = db.bids;
 
 // When an auction is initialized, this controller is
 // called to update the off-chain server
-async function startAuction(req, res) {
-  try {
-    const newAuction = {
-      nftId: req.body.nftId,
-      deployerKey: req.body.deployerKey,
-      contractHash: req.body.contractHash,
-      packageHash: req.body.packageHash,
-      startDate: req.body.startDate,
-      endDate: req.body.endDate,
-      sellNowPrice: req.body.sellNowPrice,
-      minimumPrice: req.body.minimumPrice,
-      approved: false,
-    };
+// async function startAuction(req, res) {
+//   try {
+//     const newAuction = {
+//       nftId: req.body.nftId,
+//       deployerKey: req.body.deployerKey,
+//       contractHash: req.body.contractHash,
+//       packageHash: req.body.packageHash,
+//       startDate: req.body.startDate,
+//       endDate: req.body.endDate,
+//       sellNowPrice: req.body.sellNowPrice,
+//       minimumPrice: req.body.minimumPrice,
+//       approved: false,
+//     };
 
-    const createdAuction = await Auctions.create(newAuction);
-    return res.status(200).send(createdAuction);
-  } catch (error) {
-    console.error(error);
+//     const createdAuction = await Auctions.create(newAuction);
+//     return res.status(200).send(createdAuction);
+//   } catch (error) {
+//     console.error(error);
 
-    return res.status(500).send("An error occurred");
-  }
-}
+//     return res.status(500).send("An error occurred");
+//   }
+// }
 
 async function addBidOnAuction(req, res) {
   try {
@@ -85,6 +85,17 @@ async function deployAuction(req, res) {
     if (hashes == "") {
       return res.status(500).send("Error in getting hashes");
     }
+    const newAuction = {
+      nftId: req.body.nftId,
+      deployerKey: req.body.deployerKey,
+      contractHash: hashes.contractHash,
+      packageHash: hashes.packageHash,
+      startDate: req.body.startDate,
+      endDate: req.body.endDate,
+      minimumPrice: req.body.minimumPrice,
+      approved: true,
+    };
+    await Auctions.create(newAuction);
 
     return res.status(200).json({ deployHash, hashes });
   } catch (error) {
@@ -110,7 +121,6 @@ async function deploySigned(req, res) {
 }
 
 module.exports = {
-  startAuction,
   addBidOnAuction,
   getAllAuctions,
   deployAuction,
