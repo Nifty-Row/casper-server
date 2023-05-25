@@ -1,8 +1,13 @@
 // Casper
-const { CasperServiceByJsonRPC, DeployUtil } = require("casper-js-sdk");
+const {
+  CasperServiceByJsonRPC,
+  DeployUtil,
+  Contracts,
+} = require("casper-js-sdk");
 const confirmDeploy = require("../utils/confirmDeploy");
 const getDeployedHashes = require("../utils/getDeployedHashes");
 const client = new CasperServiceByJsonRPC("http://3.136.227.9:7777/rpc");
+const contract = new Contracts.Contract(client);
 
 // Get the models
 const db = require("../models");
@@ -73,6 +78,28 @@ async function getAllAuctions(req, res) {
   }
 }
 
+async function deployBidPurse(req, res) {
+  try {
+    const signedDeployJSON = req.body.signedDeployJSON;
+
+    const signedDeploy = DeployUtil.deployFromJson(signedDeployJSON).unwrap();
+    const { deployHash } = await client.deploy(signedDeploy);
+    const result = await confirmDeploy(deployHash);
+
+    // const hashes = await getDeployedHashes(deployHash);
+    // if (hashes == "") {
+    //   return res.status(500).send("Error in getting hashes");
+    // }
+    // contract.setContractHash(hashes.contractHash);
+    // const bidPurse = await contract.queryContractData(["---here----"]);
+
+    return res.status(200).json({ deployHash });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send("Error deploying BidPurse on-chain");
+  }
+}
+
 async function deployAuction(req, res) {
   try {
     const signedDeployJSON = req.body.signedDeployJSON;
@@ -100,7 +127,7 @@ async function deployAuction(req, res) {
     return res.status(200).json({ deployHash, hashes });
   } catch (error) {
     console.error(error);
-    return res.status(500).send("Error deploying on-chain");
+    return res.status(500).send("Error deploying Auction on-chain");
   }
 }
 
@@ -123,6 +150,7 @@ async function deploySigned(req, res) {
 module.exports = {
   addBidOnAuction,
   getAllAuctions,
+  deployBidPurse,
   deployAuction,
   deploySigned,
 };

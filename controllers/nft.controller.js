@@ -182,8 +182,10 @@ async function addNft(req, res) {
 async function getAllNfts(req, res) {
   try {
     const foundNfts = await Nfts.findAll({ include: Users });
+
+    // BidPurse deployHash = fedd723f57592b53bba63e5632d2f5b048d09967099f225b9ec66d5411910cd0
     // const hashes = await getDeployedHashes(
-    //   "2ff12c3005de60d09944faeb351badd6809da917c74a1f9b4b5fefd52b788c18"
+    //   "fedd723f57592b53bba63e5632d2f5b048d09967099f225b9ec66d5411910cd0"
     // );
 
     return res.status(200).send(foundNfts);
