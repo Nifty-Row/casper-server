@@ -3,6 +3,7 @@ const cors = require("cors");
 const fileUpload = require("express-fileupload");
 const nftRoutes = require("./routes/nft.routes");
 const auctionRoutes = require("./routes/auction.routes");
+const userRoutes = require("./routes/user.routes");
 const swaggerDocs = require("./utils/swagger");
 
 const app = express();
@@ -22,6 +23,7 @@ app.use(
 // APIs
 app.use("/api/nft", nftRoutes);
 app.use("/api/auction", auctionRoutes);
+app.use("/api/user", userRoutes);
 
 app.listen(PORT, () => {
   swaggerDocs(app, PORT);

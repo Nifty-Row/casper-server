@@ -29,6 +29,21 @@ async function getUsersByCategory(req, res) {
   }
 }
 
+async function getUserByKey(req, res) {
+  try {
+    const publicKey = req.params.publicKey;
+    const foundUser = await Users.findOne({
+      where: { publicKey: publicKey },
+      include: all,
+    });
+    return res.status(200).send(foundUser);
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).send("An error occurred.");
+  }
+}
+
 async function updateUser(req, res) {
   try {
     const publicKey = req.params.publicKey;
@@ -49,6 +64,7 @@ async function updateUser(req, res) {
 
 module.exports = {
   getAllUsers,
-  updateUser,
+  getUserByKey,
   getUsersByCategory,
+  updateUser,
 };
