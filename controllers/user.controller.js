@@ -4,7 +4,7 @@ const Users = db.users;
 async function getAllUsers(req, res) {
   try {
     const foundUsers = await Users.findAll({
-      include: all,
+      include: { all: true, nested: true },
     });
     return res.status(200).send(foundUsers);
   } catch (error) {
@@ -19,7 +19,7 @@ async function getUsersByCategory(req, res) {
     const category = req.params.category;
     const foundUsers = await Users.findAll({
       where: { category: category.charAt(0).toUpperCase() + category.slice(1) },
-      include: all,
+      include: { all: true, nested: true },
     });
     return res.status(200).send(foundUsers);
   } catch (error) {
@@ -34,7 +34,7 @@ async function getUserByKey(req, res) {
     const publicKey = req.params.publicKey;
     const foundUser = await Users.findOne({
       where: { publicKey: publicKey },
-      include: all,
+      include: { all: true, nested: true },
     });
     return res.status(200).send(foundUser);
   } catch (error) {
