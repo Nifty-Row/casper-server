@@ -29,7 +29,26 @@ async function getUsersByCategory(req, res) {
   }
 }
 
+async function updateUser(req, res) {
+  try {
+    const publicKey = req.params.publicKey;
+    const column = req.body.column;
+    const value = req.body.value;
+
+    await Users.update(
+      { [column]: value },
+      {
+        where: { publicKey: publicKey },
+      }
+    );
+    return res.status(200).send("User updated");
+  } catch (error) {
+    return res.status(500).send("An error occurred.");
+  }
+}
+
 module.exports = {
   getAllUsers,
+  updateUser,
   getUsersByCategory,
 };
