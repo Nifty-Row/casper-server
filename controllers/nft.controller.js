@@ -347,6 +347,7 @@ async function grantMinter(req, res) {
       canMint: true,
       category: "Collector",
     };
+    console.info("deployHash: ", deployHash);
     await Users.create(newUser);
 
     return res.status(200).send(deployHash);

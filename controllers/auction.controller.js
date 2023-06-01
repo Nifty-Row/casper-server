@@ -81,10 +81,12 @@ async function getAllAuctions(req, res) {
 async function deployBidPurse(req, res) {
   try {
     const signedDeployJSON = req.body.signedDeployJSON;
+    console.info("signedDeployJSON: ", signedDeployJSON);
 
     const signedDeploy = DeployUtil.deployFromJson(signedDeployJSON).unwrap();
     const { deployHash } = await client.deploy(signedDeploy);
     const result = await confirmDeploy(deployHash);
+    console.info("deployHash: ", deployHash);
 
     // const hashes = await getDeployedHashes(deployHash);
     // if (hashes == "") {
