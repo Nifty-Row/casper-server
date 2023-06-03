@@ -3,6 +3,7 @@ const database = require("../config/database");
 
 const sequelize = new Sequelize(database.DB, database.USER, database.PASSWORD, {
   host: database.HOST,
+  port: database.PORT,
   dialect: database.dialect,
   // operatorsAliases: false,
   operatorsAliases: 0,
@@ -46,7 +47,7 @@ db.auctions = Auction;
 db.users = User;
 db.bids = Bid;
 
-db.sequelize.sync({ force: false }).then(() => {
+db.sequelize.sync({ force: true }).then(() => {
   console.log("Resync done!");
 });
 
