@@ -47,7 +47,7 @@ db.auctions = Auction;
 db.users = User;
 db.bids = Bid;
 
-db.sequelize.sync({ force: false }).then(() => {
+db.sequelize.sync().then(() => {
   console.log("Resync done!");
 });
 
