@@ -4,6 +4,6 @@ id_rsa_priv.pem
 build/
 reserves
 rest-samples
-config/database.js
+# config/database.js
 config/database.js.dev
 config/database.js.prod
