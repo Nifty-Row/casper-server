@@ -40,6 +40,7 @@ module.exports = (sequelize, DataTypes) => {
     publicKey: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
   });
 
