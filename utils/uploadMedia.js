@@ -11,7 +11,9 @@ cloudinary.config({
 // Upload file
 async function uploadToCloudinary(fileLocalPath) {
   try {
-    const result = await cloudinary.uploader.upload(fileLocalPath);
+    const result = await cloudinary.uploader.upload(fileLocalPath, {
+      resource_type: "raw",
+    });
     fs.unlinkSync(fileLocalPath);
 
     return result.secure_url;
