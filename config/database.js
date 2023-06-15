@@ -1,8 +1,8 @@
 module.exports = {
-  HOST: "db-mysql-lon1-83313-do-user-12029859-0.b.db.ondigitalocean.com",
-  USER: "casper2",
-  PASSWORD: "AVNS_UdrQJicUu_GYNLkNtOW",
-  PORT: 25060,
+  HOST: "localhost",
+  USER: "root",
+  PASSWORD: "",
+  PORT: 3306,
   DB: "yasuke_casper",
   dialect: "mysql",
   pool: {
