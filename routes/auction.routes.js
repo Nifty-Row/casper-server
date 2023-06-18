@@ -10,5 +10,6 @@ router.post("/deployAuction", auctionController.deployAuction);
 router.post("/deploySigned", auctionController.deploySigned);
 router.put("/bidOnAuction", auctionController.addBidOnAuction);
 router.get("/allAuctions", auctionController.getAllAuctions);
+router.get("/getAuctionByNft/:nftId", auctionController.getAuctionByNft);
 
 module.exports = router;

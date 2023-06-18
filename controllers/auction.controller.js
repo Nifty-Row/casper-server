@@ -97,6 +97,21 @@ async function getAllAuctions(req, res) {
     return res.status(500).send("An error occurred.");
   }
 }
+async function getAuctionByNft(req, res) {
+  const nftId = req.param.nftId;
+  try {
+    const foundAuctions = await Auctions.findOne({ 
+      where: { 
+        nftId:nftId, 
+      }
+    });
+    return res.status(200).send(foundAuctions);
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).send("An error occurred.");
+  }
+}
 
 async function deployBidPurse(req, res) {
   try {
@@ -189,6 +204,7 @@ module.exports = {
   getHashes,
   startAuction,
   updateAuctionHashes,
+  getAuctionByNft,
   addBidOnAuction,
   getAllAuctions,
   deployBidPurse,
