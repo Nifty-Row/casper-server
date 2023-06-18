@@ -16,28 +16,26 @@ const Bids = db.bids;
 
 // When an auction is initialized, this controller is
 // called to update the off-chain server
-// async function startAuction(req, res) {
-//   try {
-//     const newAuction = {
-//       nftId: req.body.nftId,
-//       deployerKey: req.body.deployerKey,
-//       contractHash: req.body.contractHash,
-//       packageHash: req.body.packageHash,
-//       startDate: req.body.startDate,
-//       endDate: req.body.endDate,
-//       sellNowPrice: req.body.sellNowPrice,
-//       minimumPrice: req.body.minimumPrice,
-//       approved: false,
-//     };
+async function startAuction(req, res) {
+  try {
+    const newAuction = {
+      nftId: req.body.nftId,
+      deployerKey: req.body.deployerKey,
+      deployHash: req.body.deployHash,
+      startDate: req.body.startDate,
+      endDate: req.body.endDate,
+      minimumPrice: req.body.minimumPrice,
+      approved: false,
+    };
 
-//     const createdAuction = await Auctions.create(newAuction);
-//     return res.status(200).send(createdAuction);
-//   } catch (error) {
-//     console.error(error);
+    const createdAuction = await Auctions.create(newAuction);
+    return res.status(200).send(createdAuction);
+  } catch (error) {
+    console.error(error);
 
-//     return res.status(500).send("An error occurred");
-//   }
-// }
+    return res.status(500).send("An error occurred");
+  }
+}
 
 async function addBidOnAuction(req, res) {
   try {
@@ -133,6 +131,22 @@ async function deployAuction(req, res) {
   }
 }
 
+async function getHashes(req, res) {
+  try {
+    const deployedHash = req.params.deployHash;
+    const result = await confirmDeploy(deployedHash);
+
+    const hashes = await getDeployedHashes(deployedHash);
+    if (result == "") {
+      return res.status(500).send("Error in getting hashes");
+    }
+    return res.status(200).json({ result, hashes });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send("Error fetching result :"+JSON.stringify(error));
+  }
+}
+
 // Blockchain deploys
 async function deploySigned(req, res) {
   try {
@@ -150,6 +164,8 @@ async function deploySigned(req, res) {
 }
 
 module.exports = {
+  getHashes,
+  startAuction,
   addBidOnAuction,
   getAllAuctions,
   deployBidPurse,

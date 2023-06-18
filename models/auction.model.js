@@ -16,9 +16,15 @@ module.exports = (sequelize, DataTypes) => {
     },
     contractHash: {
       type: DataTypes.STRING,
+      unique: true,
+    },
+    deployHash: {
+      type: DataTypes.STRING,
+      unique: true,
     },
     packageHash: {
       type: DataTypes.STRING,
+      unique: true,
     },
     startDate: {
       type: DataTypes.DATE,
