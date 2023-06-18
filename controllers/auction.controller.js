@@ -188,6 +188,7 @@ async function deploySigned(req, res) {
 module.exports = {
   getHashes,
   startAuction,
+  updateAuctionHashes,
   addBidOnAuction,
   getAllAuctions,
   deployBidPurse,
