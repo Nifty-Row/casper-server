@@ -3,6 +3,7 @@ const auctionController = require("../controllers/auction.controller");
 const router = express.Router();
 
 router.post("/startAuction", auctionController.startAuction);
+router.post("/updateAuction", auctionController.updateAuctionHashes);
 router.get("/getHashes/:deployHash", auctionController.getHashes);
 router.post("/deployBidPurse", auctionController.deployBidPurse);
 router.post("/deployAuction", auctionController.deployAuction);

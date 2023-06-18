@@ -36,6 +36,28 @@ async function startAuction(req, res) {
     return res.status(500).send("An error occurred");
   }
 }
+async function updateAuctionHashes(req, res) {
+  try {
+    const deployHash = req.body.deployHash;
+    const packageHash = req.body.packageHash;
+    const contractHash = req.body.contractHash;
+
+    const auction = await Auctions.findOne({ where: { deployHash:deployHash } });
+    if (!auction) {
+      return res.status(404).send("Auction not found");
+    }
+
+    auction.packageHash = packageHash;
+    auction.contractHash = contractHash;
+
+    const updatedAuction = await auction.save();
+    return res.status(200).send(updatedAuction);
+  }catch (error) {
+    console.error(error);
+
+    return res.status(500).send("An error occurred"+JSON.stringify(error));
+  }
+}
 
 async function addBidOnAuction(req, res) {
   try {
@@ -140,7 +162,7 @@ async function getHashes(req, res) {
     if (result == "") {
       return res.status(500).send("Error in getting hashes");
     }
-    return res.status(200).json({ result, hashes });
+    return res.status(200).json({ hashes });
   } catch (error) {
     console.error(error);
     return res.status(500).send("Error fetching result :"+JSON.stringify(error));
