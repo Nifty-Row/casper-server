@@ -98,7 +98,7 @@ async function getAllAuctions(req, res) {
   }
 }
 async function getAuctionByNft(req, res) {
-  const nftId = req.param.nftId;
+  const nftId = req.params.nftId;
   try {
     const foundAuctions = await Auctions.findOne({ 
       where: { 
