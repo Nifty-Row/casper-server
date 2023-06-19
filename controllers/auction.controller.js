@@ -21,6 +21,7 @@ async function startAuction(req, res) {
     const newAuction = {
       nftId: req.body.nftId,
       auctionId: req.body.auctionId,
+      userId: req.body.userId,
       deployerKey: req.body.deployerKey,
       deployHash: req.body.deployHash,
       startDate: req.body.startDate,

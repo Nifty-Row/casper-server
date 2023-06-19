@@ -111,7 +111,7 @@ async function generateMediaUrls(req, res) {
   } catch (error) {
     console.error(error);
 
-    return res.status(500).send("An error occurred."+JSON.stringify(error));
+    return res.status(500).send("An error occurred." + JSON.stringify(error));
   }
 }
 
@@ -127,6 +127,7 @@ async function addNft(req, res) {
     const newNft = {
       tokenId: req.body.tokenId,
       deployerKey: deployerKey,
+      userId: req.body.userId,
       ownerKey: req.body.ownerKey,
       mediaType: mediaType,
       mediaName: req.body.mediaName,
