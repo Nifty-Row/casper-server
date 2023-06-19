@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     deployHash: {
       type: DataTypes.STRING,
       unique: true,
+      allowNull: false,
     },
     packageHash: {
       type: DataTypes.STRING,
