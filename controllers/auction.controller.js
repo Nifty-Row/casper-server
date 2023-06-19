@@ -20,6 +20,7 @@ async function startAuction(req, res) {
   try {
     const newAuction = {
       nftId: req.body.nftId,
+      auctionId: req.body.auctionId,
       deployerKey: req.body.deployerKey,
       deployHash: req.body.deployHash,
       startDate: req.body.startDate,
@@ -42,7 +43,9 @@ async function updateAuctionHashes(req, res) {
     const packageHash = req.body.packageHash;
     const contractHash = req.body.contractHash;
 
-    const auction = await Auctions.findOne({ where: { deployHash:deployHash } });
+    const auction = await Auctions.findOne({
+      where: { deployHash: deployHash },
+    });
     if (!auction) {
       return res.status(404).send("Auction not found");
     }
@@ -52,10 +55,10 @@ async function updateAuctionHashes(req, res) {
 
     const updatedAuction = await auction.save();
     return res.status(200).send(updatedAuction);
-  }catch (error) {
+  } catch (error) {
     console.error(error);
 
-    return res.status(500).send("An error occurred"+JSON.stringify(error));
+    return res.status(500).send("An error occurred" + JSON.stringify(error));
   }
 }
 
@@ -100,10 +103,10 @@ async function getAllAuctions(req, res) {
 async function getAuctionByNft(req, res) {
   const nftId = req.params.nftId;
   try {
-    const foundAuctions = await Auctions.findOne({ 
-      where: { 
-        nftId:nftId, 
-      }
+    const foundAuctions = await Auctions.findOne({
+      where: {
+        nftId: nftId,
+      },
     });
     return res.status(200).send(foundAuctions);
   } catch (error) {
@@ -180,7 +183,9 @@ async function getHashes(req, res) {
     return res.status(200).json({ hashes });
   } catch (error) {
     console.error(error);
-    return res.status(500).send("Error fetching result :"+JSON.stringify(error));
+    return res
+      .status(500)
+      .send("Error fetching result :" + JSON.stringify(error));
   }
 }
 
