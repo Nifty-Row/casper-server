@@ -95,7 +95,9 @@ async function addBidOnAuction(req, res) {
 
 async function getAllAuctions(req, res) {
   try {
-    const foundAuctions = await Auctions.findAll({});
+    const foundAuctions = await Auctions.findAll({
+      include: { all: true, nested: true },
+    });
     return res.status(200).send(foundAuctions);
   } catch (error) {
     console.error(error);
@@ -110,6 +112,7 @@ async function getAuctionByNft(req, res) {
       where: {
         nftId: nftId,
       },
+      include: { all: true, nested: true },
     });
     return res.status(200).send(foundAuctions);
   } catch (error) {

@@ -219,7 +219,10 @@ async function getNftsByOwner(req, res) {
   try {
     const ownerKey = req.params.ownerKey;
 
-    const foundNfts = await Nfts.findAll({ where: { ownerKey: ownerKey } });
+    const foundNfts = await Nfts.findAll({
+      where: { ownerKey: ownerKey },
+      include: { all: true, nested: true },
+    });
     return res.status(200).send(foundNfts);
   } catch (error) {
     console.error(error);
