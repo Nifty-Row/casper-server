@@ -1,9 +1,9 @@
 module.exports = (sequelize, DataTypes) => {
   const Auction = sequelize.define("auction", {
     auctionId: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
     },
     nftId: {
       type: DataTypes.STRING,
@@ -16,9 +16,15 @@ module.exports = (sequelize, DataTypes) => {
     },
     contractHash: {
       type: DataTypes.STRING,
+      unique: true,
+    },
+    deployHash: {
+      type: DataTypes.STRING,
+      unique: true,
     },
     packageHash: {
       type: DataTypes.STRING,
+      unique: true,
     },
     startDate: {
       type: DataTypes.DATE,

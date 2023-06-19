@@ -111,7 +111,7 @@ async function generateMediaUrls(req, res) {
   } catch (error) {
     console.error(error);
 
-    return res.status(500).send("An error occurred.");
+    return res.status(500).send("An error occurred."+JSON.stringify(error));
   }
 }
 
