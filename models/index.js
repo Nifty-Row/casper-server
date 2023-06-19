@@ -42,6 +42,9 @@ Auction.belongsTo(User);
 User.hasMany(Bid);
 Bid.belongsTo(User);
 
+Auction.hasMany(Bid);
+Bid.belongsTo(Auction);
+
 db.nfts = Nft;
 db.auctions = Auction;
 db.users = User;

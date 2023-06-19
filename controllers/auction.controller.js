@@ -20,7 +20,6 @@ async function startAuction(req, res) {
   try {
     const newAuction = {
       nftId: req.body.nftId,
-      auctionId: req.body.auctionId,
       userId: req.body.userId,
       deployerKey: req.body.deployerKey,
       deployHash: req.body.deployHash,
@@ -66,8 +65,10 @@ async function updateAuctionHashes(req, res) {
 async function addBidOnAuction(req, res) {
   try {
     const auctionId = req.params.auctionId;
+
     const bid = req.body.bid;
     const bidder = req.body.bidder;
+    const userId = req.body.userId;
 
     // Check if bidder has already bidded
     const foundBid = await Bids.findOne({ where: { auctionId, bidder } });
@@ -76,6 +77,7 @@ async function addBidOnAuction(req, res) {
         auctionId,
         bid,
         bidder,
+        userId,
       };
       const createdBid = await Bids.create(newBid);
       return res.status(200).send("Bid added successfully");
