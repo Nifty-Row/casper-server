@@ -7,7 +7,7 @@ router.post("/addNft", nftController.addNft);
 router.post("/grantMinter", nftController.grantMinter);
 router.post("/deploySigned", nftController.deploySigned);
 router.get("/allNfts", nftController.getAllNfts);
-router.get("/nftsByOwner/:ownerKey", nftController.getAllNfts);
+router.get("/nftsByOwner/:ownerKey", nftController.getNftsByOwner);
 router.get("/nftsInAuction", nftController.getAllNftsInAuction);
 router.get("/media/:type", nftController.getNftsOfMediaType);
 router.get("/asset/:type", nftController.getNftsOfAssetType);

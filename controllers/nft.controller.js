@@ -202,7 +202,7 @@ async function getNftByTokenId(req, res) {
 
     const foundNft = await Nfts.findOne({
       where: { tokenId: tokenId },
-      include: Users,
+      include: { all: true, nested: true },
     });
     return res.status(200).send(foundNft);
   } catch (error) {
@@ -229,7 +229,7 @@ async function getAllNftsInAuction(req, res) {
   try {
     const foundNfts = await Nfts.findAll({
       where: { inAuction: true },
-      include: Users,
+      include: { all: true, nested: true },
     });
     return res.status(200).send(foundNfts);
   } catch (error) {
@@ -244,7 +244,7 @@ async function getNftsOfMediaType(req, res) {
     const mediaType = req.params.type;
     const foundNfts = await Nfts.findAll({
       where: { mediaType: mediaType.toLowerCase() },
-      include: Users,
+      include: { all: true, nested: true },
     });
     return res.status(200).send(foundNfts);
   } catch (error) {
@@ -259,7 +259,7 @@ async function getNftsOfAssetType(req, res) {
     const assetType = req.params.type;
     const foundNfts = await Nfts.findAll({
       where: { assetType: assetType.toLowerCase() },
-      include: Users,
+      include: { all: true, nested: true },
     });
 
     return res.status(200).send(foundNfts);
