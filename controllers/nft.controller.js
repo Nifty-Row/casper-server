@@ -396,7 +396,7 @@ async function confirmDeployment(req, res) {
   } catch (error) {
     console.error(error);
 
-    return res.status(500).send("Error confirming deploy "+JSON.stringify(error);
+    return res.status(500).send("Error confirming deploy "+JSON.stringify(error));
   }
 }
 
