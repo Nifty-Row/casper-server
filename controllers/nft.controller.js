@@ -26,6 +26,7 @@ const client = new CasperClient(NODE_URL);
 // Get the models
 const Nfts = db.nfts;
 const Users = db.users;
+const Auctions = db.auctions;
 
 async function generateMediaUrls(req, res) {
   try {
@@ -207,6 +208,14 @@ async function getNftByTokenId(req, res) {
       where: { tokenId: tokenId },
       include: { all: true, nested: true },
     });
+
+    const foundNftAuctions = await Auctions.findOne({
+      where: { nftId: tokenId },
+      include: { all: true, nested: true },
+    });
+
+    foundNft.auctions = foundNftAuctions;
+    
     return res.status(200).send(foundNft);
   } catch (error) {
     console.error(error);
