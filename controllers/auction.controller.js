@@ -19,9 +19,9 @@ const Bids = db.bids;
 // called to update the off-chain server
 async function startAuction(req, res) {
   try {
-    const nftId = req.body.nftId;
+    const tokenId = req.body.tokenId;
 
-    const foundNft = await Nfts.findOne({ where: { id: nftId } });
+    const foundNft = await Nfts.findOne({ where: { tokenId } });
     if (foundNft == null) {
       return res.status(400).send("NFT not found");
     }
@@ -29,8 +29,8 @@ async function startAuction(req, res) {
       return res.status(400).send("NFT already in another live auction");
     }
     const newAuction = {
-      nftId,
-      tokenId: req.body.tokenId,
+      tokenId,
+      nftId: req.body.nftId,
       userId: req.body.userId,
       deployerKey: req.body.deployerKey,
       deployHash: req.body.deployHash,
@@ -174,14 +174,14 @@ async function deployAuction(req, res) {
 
     const signedDeploy = DeployUtil.deployFromJson(signedDeployJSON).unwrap();
     const { deployHash } = await client.deploy(signedDeploy);
-    const result = await confirmDeploy(deployHash);
+    // const result = await confirmDeploy(deployHash);
 
-    const hashes = await getDeployedHashes(deployHash);
-    if (hashes == "") {
-      return res.status(500).send("Error in getting hashes");
-    }
+    // const hashes = await getDeployedHashes(deployHash);
+    // if (hashes == "") {
+    //   return res.status(500).send("Error in getting hashes");
+    // }
 
-    return res.status(200).json({ deployHash, hashes });
+    return res.status(200).json({ deployHash });
   } catch (error) {
     console.error(error);
     return res.status(500).send("Error deploying Auction on-chain");
