@@ -36,6 +36,9 @@ const Bid = require("./bid.model")(sequelize, DataTypes);
 User.hasMany(Nft);
 Nft.belongsTo(User);
 
+Auction.hasOne(Nft);
+Nft.belongsTo(Auction);
+
 User.hasMany(Auction);
 Auction.belongsTo(User);
 

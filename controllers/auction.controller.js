@@ -12,14 +12,25 @@ const contract = new Contracts.Contract(client);
 // Get the models
 const db = require("../models");
 const Auctions = db.auctions;
+const Nfts = db.nfts;
 const Bids = db.bids;
 
 // When an auction is initialized, this controller is
 // called to update the off-chain server
 async function startAuction(req, res) {
   try {
+    const nftId = req.body.nftId;
+
+    const foundNft = await Nfts.findOne({ where: { id: nftId } });
+    if (foundNft == null) {
+      return res.status(400).send("NFT not found");
+    }
+    if (foundNft.inAuction == true) {
+      return res.status(400).send("NFT already in another live auction");
+    }
     const newAuction = {
-      nftId: req.body.nftId,
+      nftId,
+      tokenId: req.body.tokenId,
       userId: req.body.userId,
       deployerKey: req.body.deployerKey,
       deployHash: req.body.deployHash,
@@ -30,6 +41,10 @@ async function startAuction(req, res) {
     };
 
     const createdAuction = await Auctions.create(newAuction);
+    foundNft.auctionId = createdAuction.id;
+    foundNft.inAuction = true;
+    await foundNft.save();
+
     return res.status(200).send(createdAuction);
   } catch (error) {
     console.error(error);
@@ -148,6 +163,15 @@ async function deployBidPurse(req, res) {
 
 async function deployAuction(req, res) {
   try {
+    const nftId = req.body.nftId;
+    const foundNft = await Nfts.findOne({ where: { id: nftId } });
+    if (foundNft == null) {
+      return res.status(400).send("NFT not found");
+    }
+    if (foundNft.inAuction == true) {
+      return res.status(400).send("NFT already in another live auction");
+    }
+
     const signedDeployJSON = req.body.signedDeployJSON;
 
     const signedDeploy = DeployUtil.deployFromJson(signedDeployJSON).unwrap();
@@ -159,7 +183,8 @@ async function deployAuction(req, res) {
       return res.status(500).send("Error in getting hashes");
     }
     const newAuction = {
-      nftId: req.body.nftId,
+      nftId,
+      tokenId: req.body.tokenId,
       deployerKey: req.body.deployerKey,
       contractHash: hashes.contractHash,
       packageHash: hashes.packageHash,
@@ -168,7 +193,10 @@ async function deployAuction(req, res) {
       minimumPrice: req.body.minimumPrice,
       approved: true,
     };
-    await Auctions.create(newAuction);
+    const createdAuction = await Auctions.create(newAuction);
+    foundNft.auctionId = createdAuction.id;
+    foundNft.inAuction = true;
+    await foundNft.save();
 
     return res.status(200).json({ deployHash, hashes });
   } catch (error) {
