@@ -18,6 +18,7 @@ const moveFile = require("../utils/moveFile");
 const confirmDeploy = require("../utils/confirmDeploy");
 const getDeployedHashes = require("../utils/getDeployedHashes");
 const getKeyPairOfContract = require("../utils/getKeyPairOfContract");
+const confirmDeployStatus = require("../utils/confirmDeployStatus");
 
 // Initialize Casper client
 const NODE_URL = "http://76.91.193.251:7777/rpc";
@@ -215,7 +216,7 @@ async function getNftByTokenId(req, res) {
     });
 
     foundNft.auctions = foundNftAuctions;
-    
+
     return res.status(200).send(foundNft);
   } catch (error) {
     console.error(error);
@@ -362,7 +363,6 @@ async function grantMinter(req, res) {
       canMint: true,
       category: "Collector",
     };
-    console.info("deployHash: ", deployHash);
     await Users.create(newUser);
 
     return res.status(200).send(deployHash);
@@ -387,10 +387,24 @@ async function deploySigned(req, res) {
   }
 }
 
+async function confirmDeployment(req, res) {
+  try {
+    const deployHash = req.body.deployHash;
+
+    const result = await confirmDeployStatus(deployHash);
+    return res.status(200).send(result);
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).send("Error confirming deploy");
+  }
+}
+
 module.exports = {
   generateMediaUrls,
   addNft,
   getAllNfts,
+  confirmDeployment,
   getAllNftsInAuction,
   getNftsOfMediaType,
   getNftsOfAssetType,

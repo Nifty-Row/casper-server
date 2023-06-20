@@ -140,12 +140,10 @@ async function getAuctionByNft(req, res) {
 async function deployBidPurse(req, res) {
   try {
     const signedDeployJSON = req.body.signedDeployJSON;
-    console.info("signedDeployJSON: ", signedDeployJSON);
 
     const signedDeploy = DeployUtil.deployFromJson(signedDeployJSON).unwrap();
     const { deployHash } = await client.deploy(signedDeploy);
     const result = await confirmDeploy(deployHash);
-    console.info("deployHash: ", deployHash);
 
     // const hashes = await getDeployedHashes(deployHash);
     // if (hashes == "") {
@@ -182,21 +180,6 @@ async function deployAuction(req, res) {
     if (hashes == "") {
       return res.status(500).send("Error in getting hashes");
     }
-    const newAuction = {
-      nftId,
-      tokenId: req.body.tokenId,
-      deployerKey: req.body.deployerKey,
-      contractHash: hashes.contractHash,
-      packageHash: hashes.packageHash,
-      startDate: req.body.startDate,
-      endDate: req.body.endDate,
-      minimumPrice: req.body.minimumPrice,
-      approved: true,
-    };
-    const createdAuction = await Auctions.create(newAuction);
-    foundNft.auctionId = createdAuction.id;
-    foundNft.inAuction = true;
-    await foundNft.save();
 
     return res.status(200).json({ deployHash, hashes });
   } catch (error) {
