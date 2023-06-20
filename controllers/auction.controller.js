@@ -161,8 +161,8 @@ async function deployBidPurse(req, res) {
 
 async function deployAuction(req, res) {
   try {
-    const nftId = req.body.nftId;
-    const foundNft = await Nfts.findOne({ where: { id: nftId } });
+    const tokenId = req.body.tokenId;
+    const foundNft = await Nfts.findOne({ where: { tokenId } });
     if (foundNft == null) {
       return res.status(400).send("NFT not found");
     }
