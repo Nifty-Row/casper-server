@@ -389,14 +389,14 @@ async function deploySigned(req, res) {
 
 async function confirmDeployment(req, res) {
   try {
-    const deployHash = req.body.deployHash;
+    const deployHash = req.params.deployHash;
 
     const result = await confirmDeployStatus(deployHash);
     return res.status(200).send(result);
   } catch (error) {
     console.error(error);
 
-    return res.status(500).send("Error confirming deploy");
+    return res.status(500).send("Error confirming deploy "+JSON.stringify(error));
   }
 }
 
