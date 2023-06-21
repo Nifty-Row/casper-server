@@ -6,6 +6,7 @@ const {
 } = require("casper-js-sdk");
 const confirmDeploy = require("../utils/confirmDeploy");
 const getDeployedHashes = require("../utils/getDeployedHashes");
+const findHighestBidder = require("../utils/findHighestBidder");
 const client = new CasperServiceByJsonRPC("http://3.136.227.9:7777/rpc");
 const contract = new Contracts.Contract(client);
 
@@ -38,6 +39,7 @@ async function startAuction(req, res) {
       endDate: req.body.endDate,
       minimumPrice: req.body.minimumPrice,
       approved: false,
+      status: "pending",
     };
 
     const createdAuction = await Auctions.create(newAuction);
@@ -46,6 +48,59 @@ async function startAuction(req, res) {
     await foundNft.save();
 
     return res.status(200).send(createdAuction);
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).send("An error occurred");
+  }
+}
+
+async function openAuction(req, res) {
+  try {
+    const auctionId = req.params.auctionId;
+    const foundAuction = await Auctions.findOne({ where: { id: auctionId } });
+    if (foundAuction == null) {
+      return res.status(404).send("Auction not found");
+    }
+    foundAuction.status = "open";
+    await foundAuction.save();
+    return res.status(200).send(`Auction ${auctionId} opened`);
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).send("An error occurred");
+  }
+}
+
+async function closeAuction(req, res) {
+  try {
+    const auctionId = req.params.auctionId;
+    const foundAuction = await Auctions.findOne({ where: { id: auctionId } });
+    if (foundAuction == null) {
+      return res.status(404).send("Auction not found");
+    }
+    const foundBids = await Bids.findAll({ where: { auctionId } });
+    const foundNft = await Nfts.findOne({
+      where: { tokenId: foundAuction.tokenId },
+    });
+
+    if (foundBids.length > 0) {
+      // Find highest bidder
+      const highestBidder = findHighestBidder(foundBids);
+
+      if (foundNft == null) {
+        return res.status(404).send("Auction has invalid NFT");
+      }
+      // Update auction NFT owner
+      foundNft.ownerKey = highestBidder.bidder;
+    }
+
+    foundNft.inAuction = false;
+    foundAuction.status = "close";
+
+    await foundNft.save();
+    await foundAuction.save();
+    return res.status(200).send(`Auction ${auctionId} closed`);
   } catch (error) {
     console.error(error);
 
@@ -137,6 +192,7 @@ async function getAuctionByNft(req, res) {
   }
 }
 
+// Blockchain deploys
 async function deployBidPurse(req, res) {
   try {
     const signedDeployJSON = req.body.signedDeployJSON;
@@ -206,7 +262,6 @@ async function getHashes(req, res) {
   }
 }
 
-// Blockchain deploys
 async function deploySigned(req, res) {
   try {
     const signedDeployJSON = req.body.signedDeployJSON;
@@ -225,6 +280,8 @@ async function deploySigned(req, res) {
 module.exports = {
   getHashes,
   startAuction,
+  openAuction,
+  closeAuction,
   updateAuctionHashes,
   getAuctionByNft,
   addBidOnAuction,
