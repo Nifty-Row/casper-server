@@ -165,7 +165,7 @@ async function addNft(req, res) {
     if (foundUser == null) {
       const newUser = {
         publicKey: deployerKey,
-        category: "Creator",
+        category: assetType == "physical" ? "Gallery" : "Creator",
       };
       await Users.create(newUser);
     } else {
@@ -396,7 +396,9 @@ async function confirmDeployment(req, res) {
   } catch (error) {
     console.error(error);
 
-    return res.status(500).send("Error confirming deploy "+JSON.stringify(error));
+    return res
+      .status(500)
+      .send("Error confirming deploy " + JSON.stringify(error));
   }
 }
 

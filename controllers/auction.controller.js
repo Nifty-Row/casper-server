@@ -12,9 +12,11 @@ const contract = new Contracts.Contract(client);
 
 // Get the models
 const db = require("../models");
+const getBidPurseUref = require("../utils/getBidPurseUref");
 const Auctions = db.auctions;
 const Nfts = db.nfts;
 const Bids = db.bids;
+const Purses = db.purses;
 
 // When an auction is initialized, this controller is
 // called to update the off-chain server
@@ -158,7 +160,30 @@ async function addBidOnAuction(req, res) {
     }
   } catch (error) {
     console.error(error);
+    return res.status(500).send("An error occurred");
+  }
+}
 
+async function saveBidPurseInfo(req, res) {
+  try {
+    const uref = req.body.uref;
+    const name = req.body.name;
+    const deployHash = req.body.deployHash;
+    const deployerKey = req.body.deployerKey;
+    const userId = req.body.userId;
+    const amount = req.body.amount;
+    const newPurse = {
+      uref,
+      name,
+      deployHash,
+      deployerKey,
+      userId,
+      amount,
+    };
+    const createdPurse = await Purses.create(newPurse);
+    return res.status(200).send(createdPurse);
+  } catch (error) {
+    console.error(error);
     return res.status(500).send("An error occurred");
   }
 }
@@ -187,7 +212,20 @@ async function getAuctionByNft(req, res) {
     return res.status(200).send(foundAuctions);
   } catch (error) {
     console.error(error);
+    return res.status(500).send("An error occurred.");
+  }
+}
 
+async function getPurseInfo(req, res) {
+  try {
+    const deployHash = req.params.deployHash;
+    const purseInfo = await getBidPurseUref(deployHash);
+    if (purseInfo == "") {
+      return res.status(400).send("No purse found");
+    }
+    return res.status(200).send(purseInfo);
+  } catch (error) {
+    console.error(error);
     return res.status(500).send("An error occurred.");
   }
 }
@@ -278,13 +316,15 @@ async function deploySigned(req, res) {
 }
 
 module.exports = {
-  getHashes,
   startAuction,
   openAuction,
   closeAuction,
   updateAuctionHashes,
-  getAuctionByNft,
   addBidOnAuction,
+  saveBidPurseInfo,
+  getHashes,
+  getAuctionByNft,
+  getPurseInfo,
   getAllAuctions,
   deployBidPurse,
   deployAuction,
