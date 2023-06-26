@@ -166,14 +166,13 @@ async function addBidOnAuction(req, res) {
 
 async function saveBidPurseInfo(req, res) {
   try {
-    const uref = req.body.uref;
+    // const uref = req.body.uref;
     const name = req.body.name;
     const deployHash = req.body.deployHash;
     const deployerKey = req.body.deployerKey;
     const userId = req.body.userId;
     const amount = req.body.amount;
     const newPurse = {
-      uref,
       name,
       deployHash,
       deployerKey,
@@ -182,6 +181,33 @@ async function saveBidPurseInfo(req, res) {
     };
     const createdPurse = await Purses.create(newPurse);
     return res.status(200).send(createdPurse);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send("An error occurred");
+  }
+}
+
+async function updatePurseUref(req, res) {
+  try {
+    const purseId = req.params.purseId;
+    const foundPurse = await Purses.findOne({ where: { id: purseId } });
+    if (foundPurse == null) {
+      return res.status(404).send("Purse not found");
+    }
+    foundPurse.uref = req.body.uref;
+    const savedPurse = await foundPurse.save();
+    return res.status(200).send(savedPurse);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send("An error occurred");
+  }
+}
+
+async function deletePurse(req, res) {
+  try {
+    const purseId = req.params.purseId;
+    await Purses.destroy({ where: { id: purseId } });
+    return res.status(200).send("Bid purse deleted successfully.");
   } catch (error) {
     console.error(error);
     return res.status(500).send("An error occurred");
@@ -237,7 +263,7 @@ async function deployBidPurse(req, res) {
 
     const signedDeploy = DeployUtil.deployFromJson(signedDeployJSON).unwrap();
     const { deployHash } = await client.deploy(signedDeploy);
-    const result = await confirmDeploy(deployHash);
+    // const result = await confirmDeploy(deployHash);
 
     // const hashes = await getDeployedHashes(deployHash);
     // if (hashes == "") {
@@ -322,6 +348,8 @@ module.exports = {
   updateAuctionHashes,
   addBidOnAuction,
   saveBidPurseInfo,
+  updatePurseUref,
+  deletePurse,
   getHashes,
   getAuctionByNft,
   getPurseInfo,
