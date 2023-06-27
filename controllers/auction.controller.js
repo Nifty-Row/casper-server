@@ -260,6 +260,11 @@ async function deleteAuction(req, res) {
   try {
     const auctionId = req.params.auctionId;
     await Auctions.destroy({ where: { id: auctionId } });
+    const foundNft = await Nfts.findOne({ where: { auctionId } });
+    if (foundNft !== null) {
+      foundNft.inAuction = false;
+      await foundNft.save();
+    }
     return res.status(200).send("Auction deleted successfully.");
   } catch (error) {
     console.error(error);
