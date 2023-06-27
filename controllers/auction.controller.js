@@ -256,6 +256,17 @@ async function getPurseInfo(req, res) {
   }
 }
 
+async function deleteAuction(req, res) {
+  try {
+    const auctionId = req.params.auctionId;
+    await Auctions.destroy({ where: { id: auctionId } });
+    return res.status(200).send("Auction deleted successfully.");
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send("An error occurred.");
+  }
+}
+
 // Blockchain deploys
 async function deployBidPurse(req, res) {
   try {
@@ -354,6 +365,7 @@ module.exports = {
   getAuctionByNft,
   getPurseInfo,
   getAllAuctions,
+  deleteAuction,
   deployBidPurse,
   deployAuction,
   deploySigned,

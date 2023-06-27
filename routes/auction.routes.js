@@ -17,5 +17,6 @@ router.put("/openAuction/:auctionId", auctionController.openAuction);
 router.put("/closeAuction/:auctionId", auctionController.closeAuction);
 router.put("/purse/:purseId", auctionController.updatePurseUref);
 router.delete("/purse/:purseId", auctionController.deletePurse);
+router.delete("/:auctionId", auctionController.deleteAuction);
 
 module.exports = router;
