@@ -136,7 +136,7 @@ async function updateAuctionHashes(req, res) {
 
 async function addBidOnAuction(req, res) {
   try {
-    const auctionId = req.params.auctionId;
+    const auctionId = req.body.auctionId;
 
     const bid = req.body.bid;
     const bidder = req.body.bidder;
