@@ -12,7 +12,7 @@ cloudinary.config({
 async function uploadToCloudinary(fileLocalPath) {
   try {
     const result = await cloudinary.uploader.upload(fileLocalPath, {
-      resource_type: "raw",
+      resource_type: "auto",
     });
     fs.unlinkSync(fileLocalPath);
 
