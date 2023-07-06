@@ -322,7 +322,7 @@ async function removeNFT(req, res) {
 
 async function grantMinter(req, res) {
   try {
-    const PATH_TO_SOURCE_KEYS = path.join(__dirname, "..", "nakulkey");
+    const PATH_TO_SOURCE_KEYS = path.join(__dirname, "..", "chriskey");
     const keyPairofContract = getKeyPairOfContract(PATH_TO_SOURCE_KEYS);
 
     const publicKey = req.body.publicKey;
@@ -332,7 +332,7 @@ async function grantMinter(req, res) {
 
     // NFT contract hash
     const contractHash =
-      "hash-976860ede039b6dfea08bb5565b5403b3df014b54dbce838c9ec40c065b04258";
+      "hash-4c144334e693d5a295be047ebd6519cd2075f223f6d7f5bae0397c90cf1bc115";
     const contractHashAsByteArray = [
       ...Buffer.from(contractHash.slice(5), "hex"),
     ];
