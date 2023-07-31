@@ -1,6 +1,26 @@
 const db = require("../models");
 const Users = db.users;
 
+async function addNewWallet(req, res) {
+  const publicKey = req.body.publicKey;
+  try {
+    const foundUser = await Users.findOne({
+      where: { publicKey: publicKey },
+    });
+    if (foundUser == null) {
+      const newUser = {
+        publicKey: publicKey,
+        canMint: false,
+        category: "Collector",
+      };
+      await Users.create(newUser);
+    }
+    return res.status(200).send("Success");
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send("An error occurred.");
+  }
+}
 async function getAllUsers(req, res) {
   try {
     const foundUsers = await Users.findAll({
@@ -63,6 +83,7 @@ async function updateUser(req, res) {
 }
 
 module.exports = {
+  addNewWallet,
   getAllUsers,
   getUserByKey,
   getUsersByCategory,
