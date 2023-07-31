@@ -9,7 +9,8 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-const NODE_URL = "http://76.91.193.251:7777/rpc";
+const NODE_URL = "https://rpc.testnet.casperlabs.io/rpc";
+
 async function confirmDeploy(deployHash) {
   const client = new CasperClient(NODE_URL);
   let i = 300;

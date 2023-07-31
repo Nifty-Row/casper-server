@@ -21,7 +21,7 @@ const getKeyPairOfContract = require("../utils/getKeyPairOfContract");
 const confirmDeployStatus = require("../utils/confirmDeployStatus");
 
 // Initialize Casper client
-const NODE_URL = "http://76.91.193.251:7777/rpc";
+const NODE_URL = "https://rpc.testnet.casperlabs.io/rpc";
 const client = new CasperClient(NODE_URL);
 
 // Get the models
@@ -322,10 +322,17 @@ async function removeNFT(req, res) {
 
 async function grantMinter(req, res) {
   try {
+    const publicKey = req.body.publicKey;
+
+    const foundUser = await Users.findOne({
+      where: { publicKey: publicKey },
+    });
+    if (foundUser != null && foundUser.canMint) {
+      return res.status(200).send("Use can mint");
+    }
     const PATH_TO_SOURCE_KEYS = path.join(__dirname, "..", "chriskey");
     const keyPairofContract = getKeyPairOfContract(PATH_TO_SOURCE_KEYS);
 
-    const publicKey = req.body.publicKey;
     const hash = CLPublicKey.fromHex(publicKey).toAccountHash();
     const accounthash = new CLAccountHash(hash);
     const minter = new CLKey(accounthash);
