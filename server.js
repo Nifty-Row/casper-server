@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const fileUpload = require("express-fileupload");
+require('dotenv').config();
 const nftRoutes = require("./routes/nft.routes");
 const auctionRoutes = require("./routes/auction.routes");
 const userRoutes = require("./routes/user.routes");

@@ -1,9 +1,11 @@
+require('dotenv').config();
+
 module.exports = {
-  HOST: "db-mysql-lon1-83313-do-user-12029859-0.b.db.ondigitalocean.com",
-  USER: "casper2",
-  PASSWORD: "AVNS_UdrQJicUu_GYNLkNtOW",
-  PORT: 25060,
-  DB: "yasuke_casper",
+  HOST: process.env.DB_HOST,
+  USER: process.env.DB_USER,
+  PASSWORD: process.env.DB_PASSWORD,
+  PORT: process.env.DB_PORT,
+  DB: process.env.DB_NAME,
   dialect: "mysql",
   pool: {
     max: 5,
