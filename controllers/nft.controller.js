@@ -327,8 +327,9 @@ async function grantMinter(req, res) {
     const foundUser = await Users.findOne({
       where: { publicKey: publicKey },
     });
+
     if (foundUser != null && foundUser.canMint) {
-      return res.status(200).send("Use can mint");
+      return res.status(200).send("User can mint");
     }
     const PATH_TO_SOURCE_KEYS = path.join(__dirname, "..", "chriskey");
     const keyPairofContract = getKeyPairOfContract(PATH_TO_SOURCE_KEYS);
@@ -364,7 +365,7 @@ async function grantMinter(req, res) {
     deploy = client.signDeploy(deploy, keyPairofContract);
 
     let deployHash = await client.putDeploy(deploy);
-    const result = await confirmDeploy(deployHash);
+    // const result = await confirmDeploy(deployHash);
     const newUser = {
       publicKey: publicKey,
       canMint: true,
