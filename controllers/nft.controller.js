@@ -331,7 +331,8 @@ async function grantMinter(req, res) {
     if (foundUser != null && foundUser.canMint) {
       return res.status(200).send("User can mint");
     }
-    const PATH_TO_SOURCE_KEYS = path.join(__dirname, "..", "chriskey");
+    // const PATH_TO_SOURCE_KEYS = path.join(__dirname, "..", "chriskey");
+    const PATH_TO_SOURCE_KEYS = path.join(__dirname, "..", "nakulkey");
     const keyPairofContract = getKeyPairOfContract(PATH_TO_SOURCE_KEYS);
 
     const hash = CLPublicKey.fromHex(publicKey).toAccountHash();
@@ -339,8 +340,10 @@ async function grantMinter(req, res) {
     const minter = new CLKey(accounthash);
 
     // NFT contract hash
+    // Chris contract = "hash-4c144334e693d5a295be047ebd6519cd2075f223f6d7f5bae0397c90cf1bc115"
+    // Nakul contract = "hash-997eb3acf0ff2ddd79e5552f11da1bdd66d7d8a85da0291b28739c1107b43217"
     const contractHash =
-      "hash-4c144334e693d5a295be047ebd6519cd2075f223f6d7f5bae0397c90cf1bc115";
+      "hash-997eb3acf0ff2ddd79e5552f11da1bdd66d7d8a85da0291b28739c1107b43217";
     const contractHashAsByteArray = [
       ...Buffer.from(contractHash.slice(5), "hex"),
     ];
@@ -365,7 +368,7 @@ async function grantMinter(req, res) {
     deploy = client.signDeploy(deploy, keyPairofContract);
 
     let deployHash = await client.putDeploy(deploy);
-    // const result = await confirmDeploy(deployHash);
+    const result = await confirmDeploy(deployHash);
     const newUser = {
       publicKey: publicKey,
       canMint: true,
@@ -385,7 +388,7 @@ async function deploySigned(req, res) {
     const signedDeployJSON = req.body.signedDeployJSON;
 
     const deploy = DeployUtil.deployFromJson(signedDeployJSON).unwrap();
-    const deployHash = await client.putDeploy(deploy); //
+    const deployHash = await client.putDeploy(deploy);
     const result = await confirmDeploy(deployHash);
     return res.status(200).send(deployHash);
   } catch (error) {
