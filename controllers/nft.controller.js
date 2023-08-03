@@ -342,8 +342,10 @@ async function grantMinter(req, res) {
     // NFT contract hash
     // Chris contract = "hash-4c144334e693d5a295be047ebd6519cd2075f223f6d7f5bae0397c90cf1bc115"
     // Nakul contract = "hash-997eb3acf0ff2ddd79e5552f11da1bdd66d7d8a85da0291b28739c1107b43217"
+    // Nakul contract = "hash-976860ede039b6dfea08bb5565b5403b3df014b54dbce838c9ec40c065b04258"
+
     const contractHash =
-      "hash-997eb3acf0ff2ddd79e5552f11da1bdd66d7d8a85da0291b28739c1107b43217";
+      "hash-976860ede039b6dfea08bb5565b5403b3df014b54dbce838c9ec40c065b04258";
     const contractHashAsByteArray = [
       ...Buffer.from(contractHash.slice(5), "hex"),
     ];
