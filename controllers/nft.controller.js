@@ -386,7 +386,7 @@ async function grantMinter(req, res) {
     deploy = client.signDeploy(deploy, keyPairofContract);
 
     let deployHash = await client.putDeploy(deploy);
-    const result = await confirmDeploy(deployHash);
+    // const result = await confirmDeploy(deployHash);
     const newUser = {
       publicKey: publicKey,
       canMint: true,
