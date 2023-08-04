@@ -387,12 +387,17 @@ async function grantMinter(req, res) {
 
     let deployHash = await client.putDeploy(deploy);
     // const result = await confirmDeploy(deployHash);
-    const newUser = {
-      publicKey: publicKey,
-      canMint: true,
-      category: "Collector",
-    };
-    await Users.create(newUser);
+    if (foundUser == null) {
+      const newUser = {
+        publicKey: publicKey,
+        canMint: true,
+        category: "Collector",
+      };
+      await Users.create(newUser);
+    } else {
+      foundUser.canMint = true;
+      await foundUser.save();
+    }
 
     return res.status(200).send(deployHash);
   } catch (error) {
