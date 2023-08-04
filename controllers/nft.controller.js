@@ -398,7 +398,7 @@ async function grantMinter(req, res) {
   } catch (error) {
     console.error(error);
 
-    return res.status(500).send("Error deploying on-chain");
+    return res.status(500).send("NFT grantMinter: Error deploying on-chain");
   }
 }
 
@@ -413,7 +413,7 @@ async function deploySigned(req, res) {
   } catch (error) {
     console.error(error);
 
-    return res.status(500).send("Error deploying on-chain");
+    return res.status(500).send("NFT deploySigned: Error deploying on-chain");
   }
 }
 

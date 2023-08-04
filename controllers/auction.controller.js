@@ -291,7 +291,9 @@ async function deployBidPurse(req, res) {
     return res.status(200).json({ deployHash });
   } catch (error) {
     console.error(error);
-    return res.status(500).send("Error deploying BidPurse on-chain");
+    return res
+      .status(500)
+      .send("Auction deployBidPurse: Error deploying on-chain");
   }
 }
 
@@ -320,7 +322,9 @@ async function deployAuction(req, res) {
     return res.status(200).json({ deployHash });
   } catch (error) {
     console.error(error);
-    return res.status(500).send("Error deploying Auction on-chain");
+    return res
+      .status(500)
+      .send("Auction deployAuction: Error deploying on-chain");
   }
 }
 
@@ -353,7 +357,7 @@ async function deploySigned(req, res) {
     res.status(200).send(deployHash);
   } catch (error) {
     console.error(error);
-    res.status(500).send("Error deploying on-chain");
+    res.status(500).send("Auction deploySigned: Error deploying on-chain");
   }
 }
 
