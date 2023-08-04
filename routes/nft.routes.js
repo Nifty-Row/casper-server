@@ -14,6 +14,7 @@ router.get("/media/:type", nftController.getNftsOfMediaType);
 router.get("/asset/:type", nftController.getNftsOfAssetType);
 router.get("/:tokenId", nftController.getNftByTokenId);
 router.put("/updateOwner/:tokenId", nftController.updateOwner);
+router.put("/updateStatus", nftController.updateStatus);
 router.delete("/remove/:tokenId", nftController.removeNFT);
 
 module.exports = router;

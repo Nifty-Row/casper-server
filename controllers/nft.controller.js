@@ -182,6 +182,22 @@ async function addNft(req, res) {
   }
 }
 
+async function updateStatus(req, res) {
+  try {
+    const tokenId = req.body.tokenId;
+    const updatedNft = await Nfts.update(
+      { minted: true },
+      {
+        where: { tokenId: tokenId },
+      }
+    );
+    return res.status(200).send(updatedNft);
+  } catch (error) {
+    console.error("updateStatus", error);
+    return res.status(500).send("An error occurred.");
+  }
+}
+
 async function getAllNfts(req, res) {
   try {
     const foundNfts = await Nfts.findAll({
@@ -385,13 +401,14 @@ async function grantMinter(req, res) {
     return res.status(500).send("Error deploying on-chain");
   }
 }
+
 async function deploySigned(req, res) {
   try {
     const signedDeployJSON = req.body.signedDeployJSON;
 
     const deploy = DeployUtil.deployFromJson(signedDeployJSON).unwrap();
     const deployHash = await client.putDeploy(deploy);
-    const result = await confirmDeploy(deployHash);
+    // const result = await confirmDeploy(deployHash);
     return res.status(200).send(deployHash);
   } catch (error) {
     console.error(error);
@@ -419,6 +436,7 @@ module.exports = {
   generateMediaUrls,
   addNft,
   getAllNfts,
+  updateStatus,
   confirmDeployment,
   getAllNftsInAuction,
   getNftsOfMediaType,
