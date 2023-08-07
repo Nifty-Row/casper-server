@@ -40,6 +40,10 @@ module.exports = (sequelize, DataTypes) => {
     tokenHash: {
       type: DataTypes.STRING,
     },
+    minted: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
     inAuction: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
