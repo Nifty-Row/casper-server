@@ -5,6 +5,7 @@ const sequelize = new Sequelize(database.DB, database.USER, database.PASSWORD, {
   host: database.HOST,
   port: database.PORT,
   dialect: database.dialect,
+  logging: false,
   // operatorsAliases: false,
   operatorsAliases: 0,
   pool: {
@@ -59,7 +60,7 @@ db.bids = Bid;
 db.purses = Purse;
 
 db.sequelize.sync().then(() => {
-  console.log("Resync done!");
+  // console.log("Resync done!");
 });
 
 module.exports = db;
