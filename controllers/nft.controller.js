@@ -413,7 +413,9 @@ async function deploySigned(req, res) {
 
     const deploy = DeployUtil.deployFromJson(signedDeployJSON).unwrap();
     const deployHash = await client.putDeploy(deploy);
+    console.info("mint deployHash: ", deployHash);
     // const result = await confirmDeploy(deployHash);
+    // const result = await confirmDeployStatus(deployHash);
     return res.status(200).send(deployHash);
   } catch (error) {
     console.error(error);
