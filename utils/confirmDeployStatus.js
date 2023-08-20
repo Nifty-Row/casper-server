@@ -16,7 +16,7 @@ async function confirmDeployStatus(deployHash) {
   let i = 300;
   while (i != 0) {
     const [deploy, raw] = await client.getDeploy(deployHash);
-    console.info("exec res: ", raw.execution_results);
+    // console.info("exec res: ", raw.execution_results);
     if (raw.execution_results.length !== 0) {
       const result = raw.execution_results[0].result;
       return result;
