@@ -15,7 +15,11 @@ async function confirmDeployStatus(deployHash) {
   const client = new CasperClient(NODE_URL);
   if (raw.execution_results.length !== 0) {
     const result = raw.execution_results[0].result;
-    return result;
+    if (result.Success) {
+      return "success";
+    } else {
+      return "failure";
+    }
   } else {
     return "pending";
   }
