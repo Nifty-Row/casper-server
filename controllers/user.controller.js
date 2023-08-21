@@ -95,7 +95,7 @@ async function userBalance(req, res) {
     }
 
     const status = await casperService.getStatus();
-    const stateRootHash = status.last_added_block_info.state_root_hash;
+    const stateRootHash = await casperService.getStateRootHash();
 
     const uref = await casperService.getAccountBalanceUrefByPublicKey(
       stateRootHash,
