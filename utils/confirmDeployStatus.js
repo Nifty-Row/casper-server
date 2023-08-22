@@ -13,6 +13,8 @@ const NODE_URL = "https://rpc.testnet.casperlabs.io/rpc";
 
 async function confirmDeployStatus(deployHash) {
   const client = new CasperClient(NODE_URL);
+  const [deploy, raw] = await client.getDeploy(deployHash);
+
   if (raw.execution_results.length !== 0) {
     const result = raw.execution_results[0].result;
     if (result.Success) {
