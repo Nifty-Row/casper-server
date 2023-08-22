@@ -18,12 +18,12 @@ async function confirmDeployStatus(deployHash) {
   if (raw.execution_results.length !== 0) {
     const result = raw.execution_results[0].result;
     if (result.Success) {
-      return "success";
+      return { status: "success" };
     } else {
-      return "failure";
+      return { status: "failure" };
     }
   } else {
-    return "pending";
+    return { status: "pending" };
   }
 
   // let i = 300;
