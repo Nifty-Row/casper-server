@@ -226,12 +226,12 @@ async function getNftByTokenId(req, res) {
       include: { all: true, nested: true },
     });
 
-    const foundNftAuctions = await Auctions.findOne({
-      where: { nftId: tokenId },
-      include: { all: true, nested: true },
-    });
+    // const foundNftAuctions = await Auctions.findOne({
+    //   where: { nftId: tokenId },
+    //   include: { all: true, nested: true },
+    // });
 
-    foundNft.auctions = foundNftAuctions;
+    // foundNft.auctions = foundNftAuctions;
 
     return res.status(200).send(foundNft);
   } catch (error) {
