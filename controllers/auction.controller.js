@@ -7,7 +7,10 @@ const {
 const confirmDeploy = require("../utils/confirmDeploy");
 const getDeployedHashes = require("../utils/getDeployedHashes");
 const findHighestBidder = require("../utils/findHighestBidder");
-const client = new CasperServiceByJsonRPC("http://3.136.227.9:7777/rpc");
+// const client = new CasperServiceByJsonRPC("http://3.136.227.9:7777/rpc");
+const client = new CasperServiceByJsonRPC(
+  "https://rpc.testnet.casperlabs.io/rpc"
+);
 const contract = new Contracts.Contract(client);
 
 // Get the models
